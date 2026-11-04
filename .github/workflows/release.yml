@@ -1,0 +1,58 @@
+name: Build & Release
+
+# - À chaque push / PR : compile l'app pour vérifier que tout fonctionne.
+# - À chaque tag "v*" (ex : v1.0.0) : compile OptiWin.exe et le publie dans une Release GitHub.
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Déterminer la version
+        id: version
+        shell: pwsh
+        run: |
+          if ("${{ github.ref_type }}" -eq "tag") { $v = "${{ github.ref_name }}".TrimStart("v") } else { $v = "0.0.${{ github.run_number }}" }
+          "version=$v" >> $env:GITHUB_OUTPUT
+
+      - name: Publier l'exécutable
+        run: >
+          dotnet publish src/OptiWin/OptiWin.csproj
+          -c Release
+          -o publish
+          -p:Version=${{ steps.version.outputs.version }}
+          -p:DebugType=none
+
+      - name: Artefact de build
+        uses: actions/upload-artifact@v4
+        with:
+          name: OptiWin-${{ steps.version.outputs.version }}
+          path: publish/OptiWin.exe
+
+      - name: Créer la Release GitHub
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: publish/OptiWin.exe
+          generate_release_notes: true
+          body: |
+            ## Télécharger
+            👉 **[OptiWin.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/OptiWin.exe)** — aucun installateur, double-cliquez pour lancer.
+
+            Windows 10 / 11 (64 bits). L'application demande les droits administrateur au lancement.
+            Si Windows SmartScreen s'affiche : « Informations complémentaires » → « Exécuter quand même ».

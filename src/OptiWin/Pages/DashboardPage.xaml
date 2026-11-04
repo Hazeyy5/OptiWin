@@ -1,0 +1,98 @@
+<UserControl x:Class="OptiWin.Pages.DashboardPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="34,30,34,20">
+            <TextBlock Text="Tableau de bord" Style="{StaticResource PageTitle}"/>
+            <TextBlock Text="Vue d'ensemble de votre PC et optimisation rapide." Style="{StaticResource PageSubtitle}"/>
+
+            <!-- Optimisation en 1 clic -->
+            <Border Style="{StaticResource Card}" Padding="24" BorderThickness="0">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#24345E" Offset="0"/>
+                        <GradientStop Color="#2E2453" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="Optimisation en 1 clic" FontSize="20" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="OneClickDescription" TextWrapping="Wrap" Foreground="#C5CBE0" Margin="0,6,20,0"
+                                   Text="Crée un point de restauration, nettoie les fichiers inutiles et applique les optimisations recommandées."/>
+                        <TextBlock x:Name="ScoreText" Margin="0,12,0,0" FontSize="13" Foreground="#C5CBE0"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <Button x:Name="OneClickButton" Style="{StaticResource PrimaryButton}" Padding="26,13" FontSize="15" Click="OneClick_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE945;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <TextBlock Text="Optimiser maintenant"/>
+                            </StackPanel>
+                        </Button>
+                        <ProgressBar x:Name="OneClickProgress" IsIndeterminate="True" Height="4" Margin="0,10,0,0" Visibility="Collapsed"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- CPU / RAM -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="14"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="PROCESSEUR" Style="{StaticResource Muted}" FontWeight="SemiBold" FontSize="11.5"/>
+                        <TextBlock x:Name="CpuPercent" Text="0 %" FontSize="30" FontWeight="SemiBold" Margin="0,6,0,8"/>
+                        <ProgressBar x:Name="CpuBar" Maximum="100"/>
+                        <TextBlock x:Name="CpuName" Style="{StaticResource Muted}" Margin="0,10,0,0" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"/>
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="2" Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="MÉMOIRE VIVE" Style="{StaticResource Muted}" FontWeight="SemiBold" FontSize="11.5"/>
+                        <TextBlock x:Name="RamPercent" Text="0 %" FontSize="30" FontWeight="SemiBold" Margin="0,6,0,8"/>
+                        <ProgressBar x:Name="RamBar" Maximum="100" Foreground="#8B5CF6"/>
+                        <TextBlock x:Name="RamText" Style="{StaticResource Muted}" Margin="0,10,0,0"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Système -->
+            <Border Style="{StaticResource Card}">
+                <Grid x:Name="InfoGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="170"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                </Grid>
+            </Border>
+
+            <!-- Disques -->
+            <TextBlock Text="Disques" Style="{StaticResource SectionTitle}"/>
+            <ItemsControl x:Name="DrivesList">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}" Padding="18,14">
+                            <StackPanel>
+                                <DockPanel>
+                                    <TextBlock DockPanel.Dock="Right" Text="{Binding Percent, StringFormat={}{0:0} %}" Foreground="{StaticResource MutedBrush}"/>
+                                    <TextBlock>
+                                        <Run Text="{Binding Label, Mode=OneWay}" FontWeight="SemiBold"/>
+                                        <Run Text="{Binding Name, Mode=OneWay, StringFormat=({0})}" Foreground="{StaticResource MutedBrush}"/>
+                                    </TextBlock>
+                                </DockPanel>
+                                <ProgressBar Value="{Binding Percent, Mode=OneWay}" Maximum="100" Margin="0,10,0,8" Foreground="{StaticResource SuccessBrush}"/>
+                                <TextBlock Text="{Binding Summary}" Style="{StaticResource Muted}"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

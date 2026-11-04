@@ -1,0 +1,11 @@
+<UserControl x:Class="OptiWin.Pages.ToolsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="34,30,34,20">
+            <TextBlock Text="Outils" Style="{StaticResource PageTitle}"/>
+            <TextBlock Text="Outils de maintenance et de réparation de Windows." Style="{StaticResource PageSubtitle}"/>
+            <UniformGrid x:Name="ToolsGrid" Columns="2"/>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
